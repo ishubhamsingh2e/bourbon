@@ -33,3 +33,9 @@ Thumbs.db
 tmp/
 *.tmp
 *.log
+
+# binary files
+bourbon-cli
+bourbon-cli.exe
+bourbon
+bourbon.exe
