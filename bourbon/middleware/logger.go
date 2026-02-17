@@ -24,7 +24,7 @@ func Logger(logger *logging.Logger, errorStore *logging.ErrorStore) Middleware {
 			// Human-readable console output for development
 			statusColor := getStatusColor(wrapped.statusCode)
 			methodColor := getMethodColor(r.Method)
-			
+
 			fmt.Printf("%s %s%-6s\x1b[0m | %s%3d\x1b[0m | %10s | %s\n",
 				time.Now().Format("15:04:05"),
 				methodColor,
@@ -42,7 +42,7 @@ func Logger(logger *logging.Logger, errorStore *logging.ErrorStore) Middleware {
 					zap.String("ip", r.RemoteAddr),
 					zap.String("user_agent", r.UserAgent()),
 				)
-				
+
 				errorLog := &logging.ErrorLog{
 					Timestamp: start,
 					Level:     "error",

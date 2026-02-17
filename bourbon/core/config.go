@@ -85,12 +85,12 @@ type LoggingConfig struct {
 	Output          string `mapstructure:"output"`
 	FileLogging     bool   `mapstructure:"file_logging"`
 	StoragePath     string `mapstructure:"storage_path"`
-	Rotation        string `mapstructure:"rotation"`         // hourly, daily, weekly, none
-	MaxSize         int    `mapstructure:"max_size"`         // MB
-	MaxAge          int    `mapstructure:"max_age"`          // days
-	MaxBackups      int    `mapstructure:"max_backups"`      // number of backups
-	Compress        bool   `mapstructure:"compress"`         // compress old logs
-	StoreErrorsInDB bool   `mapstructure:"store_errors_db"`  // store 5xx errors in database
+	Rotation        string `mapstructure:"rotation"`        // hourly, daily, weekly, none
+	MaxSize         int    `mapstructure:"max_size"`        // MB
+	MaxAge          int    `mapstructure:"max_age"`         // days
+	MaxBackups      int    `mapstructure:"max_backups"`     // number of backups
+	Compress        bool   `mapstructure:"compress"`        // compress old logs
+	StoreErrorsInDB bool   `mapstructure:"store_errors_db"` // store 5xx errors in database
 }
 
 type SecurityConfig struct {
@@ -100,7 +100,6 @@ type SecurityConfig struct {
 	SessionTimeout    int      `mapstructure:"session_timeout"`
 	SessionCookieName string   `mapstructure:"session_cookie_name"`
 }
-
 
 func LoadConfig(configPath string) (*Config, error) {
 	v := viper.New()

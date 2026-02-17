@@ -1,6 +1,5 @@
 package migration
 
-
 import (
 	"fmt"
 	"os"
@@ -33,7 +32,7 @@ func AutoLoadMigrations() ([]string, error) {
 		if entry.IsDir() {
 			appName := entry.Name()
 			migrationDir := filepath.Join(appsDir, appName, "migrations")
-			
+
 			// Check if migrations directory exists and has .go files
 			if hasMigrations(migrationDir) {
 				migrationPaths = append(migrationPaths, migrationDir)
@@ -50,7 +49,7 @@ func hasMigrations(dir string) bool {
 	if err != nil {
 		return false
 	}
-	
+
 	for _, entry := range entries {
 		if !entry.IsDir() && filepath.Ext(entry.Name()) == ".go" {
 			name := entry.Name()
@@ -59,7 +58,7 @@ func hasMigrations(dir string) bool {
 			}
 		}
 	}
-	
+
 	return false
 }
 
@@ -88,7 +87,7 @@ func GenerateMigrationImports(projectModule string, outputPath string) error {
 		if entry.IsDir() {
 			appName := entry.Name()
 			migrationDir := filepath.Join(appsDir, appName, "migrations")
-			
+
 			// Check if migrations directory exists and has .go files
 			if hasMigrations(migrationDir) {
 				importPath := fmt.Sprintf("%s/apps/%s/migrations", projectModule, appName)

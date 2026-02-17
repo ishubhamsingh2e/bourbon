@@ -168,7 +168,7 @@ func UpdateMigrationState(appName string, models []ModelInfo, migrationID string
 				Tag:  f.Tag,
 			}
 		}
-		
+
 		state.Apps[appName].Models[model.Name] = &ModelState{
 			Name:   model.Name,
 			Hash:   ComputeSingleModelHash(model),
@@ -182,18 +182,18 @@ func UpdateMigrationState(appName string, models []ModelInfo, migrationID string
 // DetectDeletedFields compares current models with stored state to find deleted fields
 func DetectDeletedFields(appName string, models []ModelInfo) map[string][]string {
 	deletedFields := make(map[string][]string) // modelName -> []fieldName
-	
+
 	state, err := LoadMigrationState()
 	if err != nil || state.Apps[appName] == nil {
 		return deletedFields
 	}
-	
+
 	// Create lookup for current models
 	currentModels := make(map[string]*ModelInfo)
 	for i := range models {
 		currentModels[models[i].Name] = &models[i]
 	}
-	
+
 	// Check each stored model
 	for modelName, storedModel := range state.Apps[appName].Models {
 		currentModel, exists := currentModels[modelName]
@@ -201,13 +201,13 @@ func DetectDeletedFields(appName string, models []ModelInfo) map[string][]string
 			// Entire model deleted - we'll handle this separately
 			continue
 		}
-		
+
 		// Create lookup for current fields
 		currentFields := make(map[string]bool)
 		for _, f := range currentModel.Fields {
 			currentFields[f.Name] = true
 		}
-		
+
 		// Find deleted fields
 		for _, storedField := range storedModel.Fields {
 			if !currentFields[storedField.Name] {
@@ -215,6 +215,6 @@ func DetectDeletedFields(appName string, models []ModelInfo) map[string][]string
 			}
 		}
 	}
-	
+
 	return deletedFields
 }

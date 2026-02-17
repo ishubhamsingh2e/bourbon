@@ -69,7 +69,7 @@ func (mr *MigrationRunner) RunRegisteredMigrations(app string) (int, error) {
 		if err := mr.RunMigration(migration); err != nil {
 			return count, err
 		}
-		
+
 		// Check if it was actually applied (not skipped)
 		applied, _ := mr.IsApplied(migration.App(), migration.Name())
 		if applied {

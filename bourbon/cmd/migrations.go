@@ -45,14 +45,14 @@ func GenerateMigrationForApp(appName, name string) error {
 	// Show all destructive changes and ask for confirmation
 	if changes.HasDestructiveChanges() {
 		fmt.Println("\nWARNING: Destructive changes detected!")
-		
+
 		if len(changes.DeletedModels) > 0 {
 			fmt.Println("\nModels to be DELETED:")
 			for _, modelName := range changes.DeletedModels {
 				fmt.Printf("  - %s (table: %s)\n", modelName, toSnakeCase(modelName))
 			}
 		}
-		
+
 		if len(changes.DeletedFields) > 0 {
 			fmt.Println("\nFields to be DELETED:")
 			for modelName, fields := range changes.DeletedFields {
@@ -62,13 +62,13 @@ func GenerateMigrationForApp(appName, name string) error {
 				}
 			}
 		}
-		
+
 		fmt.Println("\nThese changes CANNOT be undone!")
 		fmt.Print("\nContinue? (y/N): ")
-		
+
 		var response string
 		fmt.Scanln(&response)
-		
+
 		if strings.ToLower(response) != "y" {
 			fmt.Println("Migration cancelled.")
 			return nil
@@ -83,7 +83,7 @@ func GenerateMigrationForApp(appName, name string) error {
 
 	// Generate timestamp
 	timestamp := time.Now().Format("20060102150405")
-	
+
 	// Generate filename and migration ID
 	var fileName, migrationID string
 	if name == "" {
@@ -96,7 +96,7 @@ func GenerateMigrationForApp(appName, name string) error {
 		fileName = fmt.Sprintf("%s_%s.go", timestamp, cleanName)
 		migrationID = fmt.Sprintf("%s_%s", timestamp, cleanName)
 	}
-	
+
 	filePath := filepath.Join(migrationsDir, fileName)
 
 	// Generate migration code following gormigrate best practices
@@ -172,4 +172,3 @@ func getDefaultApp() (string, error) {
 
 	return "", fmt.Errorf("no apps found in apps/ directory")
 }
-

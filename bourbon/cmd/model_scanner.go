@@ -12,24 +12,24 @@ import (
 
 // ModelInfo represents a Go struct model
 type ModelInfo struct {
-	Name       string
-	Fields     []FieldInfo
+	Name        string
+	Fields      []FieldInfo
 	PackageName string
-	FilePath   string
+	FilePath    string
 }
 
 // FieldInfo represents a struct field
 type FieldInfo struct {
-	Name     string
-	Type     string
-	Tag      string
+	Name      string
+	Type      string
+	Tag       string
 	IsPointer bool
 }
 
 // ScanModels scans the app directory for model structs
 func ScanModels(appName string) ([]ModelInfo, error) {
 	modelsPath := filepath.Join("apps", appName, "models.go")
-	
+
 	// Check if models.go exists
 	if _, err := os.Stat(modelsPath); os.IsNotExist(err) {
 		return []ModelInfo{}, nil // No models yet
@@ -128,17 +128,17 @@ func GenerateMigrationCode(models []ModelInfo, appName string) string {
 	}
 
 	var code strings.Builder
-	
+
 	// Generate AutoMigrate call
 	code.WriteString("\t\t\t// Auto-migrate models\n")
 	code.WriteString("\t\t\treturn db.AutoMigrate(\n")
-	
+
 	for _, model := range models {
 		code.WriteString(fmt.Sprintf("\t\t\t\t&%s.%s{},\n", appName, model.Name))
 	}
-	
+
 	code.WriteString("\t\t\t)")
-	
+
 	return code.String()
 }
 
@@ -149,16 +149,16 @@ func GenerateRollbackCode(models []ModelInfo) string {
 	}
 
 	var code strings.Builder
-	
+
 	code.WriteString("\t\t\t// Drop tables\n")
 	code.WriteString("\t\t\treturn db.Migrator().DropTable(\n")
-	
+
 	for _, model := range models {
 		code.WriteString(fmt.Sprintf("\t\t\t\t\"%s\",\n", toSnakeCase(model.Name)))
 	}
-	
+
 	code.WriteString("\t\t\t)")
-	
+
 	return code.String()
 }
 
@@ -172,14 +172,14 @@ func toSnakeCase(s string) string {
 		result.WriteRune(r)
 	}
 	tableName := strings.ToLower(result.String())
-	
+
 	// Pluralize (GORM convention)
 	// Simple pluralization - add 's' for most cases
 	// GORM handles this automatically, so we need to match it
 	if !strings.HasSuffix(tableName, "s") {
 		tableName += "s"
 	}
-	
+
 	return tableName
 }
 
@@ -202,13 +202,13 @@ func GenerateInlineStructs(models []ModelInfo) string {
 
 	for _, model := range models {
 		code.WriteString(fmt.Sprintf("\t\ttype %s struct {\n", model.Name))
-		
+
 		// Add BaseModel fields
 		code.WriteString("\t\t\tID        uint      `gorm:\"primarykey\"`\n")
 		code.WriteString("\t\t\tCreatedAt time.Time\n")
 		code.WriteString("\t\t\tUpdatedAt time.Time\n")
 		code.WriteString("\t\t\tDeletedAt gorm.DeletedAt `gorm:\"index\"`\n")
-		
+
 		// Add model-specific fields
 		for _, field := range model.Fields {
 			tagStr := ""
@@ -217,7 +217,7 @@ func GenerateInlineStructs(models []ModelInfo) string {
 			}
 			code.WriteString(fmt.Sprintf("\t\t\t%s %s%s\n", field.Name, field.Type, tagStr))
 		}
-		
+
 		code.WriteString("\t\t}\n")
 	}
 
@@ -232,13 +232,13 @@ func GenerateInlineAutoMigrate(models []ModelInfo) string {
 
 	var code strings.Builder
 	code.WriteString("\t\treturn db.AutoMigrate(\n")
-	
+
 	for _, model := range models {
 		code.WriteString(fmt.Sprintf("\t\t\t&%s{},\n", model.Name))
 	}
-	
+
 	code.WriteString("\t\t)")
-	
+
 	return code.String()
 }
 
@@ -250,68 +250,68 @@ func GenerateInlineDropTable(models []ModelInfo) string {
 
 	var code strings.Builder
 	code.WriteString("\t\treturn db.Migrator().DropTable(\n")
-	
+
 	for _, model := range models {
 		code.WriteString(fmt.Sprintf("\t\t\t\"%s\",\n", toSnakeCase(model.Name)))
 	}
-	
+
 	code.WriteString("\t\t)")
-	
+
 	return code.String()
 }
 
 // GenerateDropColumnCode generates code to drop deleted columns
 func GenerateDropColumnCode(deletedFields map[string][]string) string {
-if len(deletedFields) == 0 {
-return ""
-}
+	if len(deletedFields) == 0 {
+		return ""
+	}
 
-var code strings.Builder
-code.WriteString("\t\t// Drop deleted columns\n")
+	var code strings.Builder
+	code.WriteString("\t\t// Drop deleted columns\n")
 
-for modelName, fields := range deletedFields {
-tableName := toSnakeCase(modelName)
-for _, fieldName := range fields {
-columnName := fieldToSnakeCase(fieldName)
-// Use table name in string format for DropColumn
-code.WriteString(fmt.Sprintf("\t\tif err := db.Migrator().DropColumn(\"%s\", \"%s\"); err != nil {\n", 
-tableName, columnName))
-code.WriteString("\t\t\treturn err\n")
-code.WriteString("\t\t}\n")
-}
-}
+	for modelName, fields := range deletedFields {
+		tableName := toSnakeCase(modelName)
+		for _, fieldName := range fields {
+			columnName := fieldToSnakeCase(fieldName)
+			// Use table name in string format for DropColumn
+			code.WriteString(fmt.Sprintf("\t\tif err := db.Migrator().DropColumn(\"%s\", \"%s\"); err != nil {\n",
+				tableName, columnName))
+			code.WriteString("\t\t\treturn err\n")
+			code.WriteString("\t\t}\n")
+		}
+	}
 
-return code.String()
+	return code.String()
 }
 
 // fieldToSnakeCase converts CamelCase to snake_case WITHOUT pluralization (for columns)
 func fieldToSnakeCase(s string) string {
-var result strings.Builder
-for i, r := range s {
-if i > 0 && r >= 'A' && r <= 'Z' {
-result.WriteRune('_')
-}
-result.WriteRune(r)
-}
-return strings.ToLower(result.String())
+	var result strings.Builder
+	for i, r := range s {
+		if i > 0 && r >= 'A' && r <= 'Z' {
+			result.WriteRune('_')
+		}
+		result.WriteRune(r)
+	}
+	return strings.ToLower(result.String())
 }
 
 // GenerateInlineAutoMigrateNoReturn generates AutoMigrate call without return statement
 func GenerateInlineAutoMigrateNoReturn(models []ModelInfo) string {
-if len(models) == 0 {
-return ""
-}
+	if len(models) == 0 {
+		return ""
+	}
 
-var code strings.Builder
-code.WriteString("\t\tif err := db.AutoMigrate(\n")
+	var code strings.Builder
+	code.WriteString("\t\tif err := db.AutoMigrate(\n")
 
-for _, model := range models {
-code.WriteString(fmt.Sprintf("\t\t\t&%s{},\n", model.Name))
-}
+	for _, model := range models {
+		code.WriteString(fmt.Sprintf("\t\t\t&%s{},\n", model.Name))
+	}
 
-code.WriteString("\t\t); err != nil {\n")
-code.WriteString("\t\t\treturn err\n")
-code.WriteString("\t\t}\n")
+	code.WriteString("\t\t); err != nil {\n")
+	code.WriteString("\t\t\treturn err\n")
+	code.WriteString("\t\t}\n")
 
-return code.String()
+	return code.String()
 }

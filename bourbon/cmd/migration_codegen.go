@@ -41,7 +41,7 @@ func GenerateMigrationCodeFromChanges(changes *MigrationChanges) string {
 	if result == "" {
 		return "\t\treturn nil"
 	}
-	
+
 	return strings.TrimSuffix(result, "\n") + "\n\t\treturn nil"
 }
 
@@ -81,21 +81,21 @@ func GenerateRollbackCodeFromChanges(changes *MigrationChanges) string {
 	if result == "" {
 		return "\t\treturn nil"
 	}
-	
+
 	return strings.TrimSuffix(result, "\n") + "\n\t\treturn nil"
 }
 
 // generateCreateTableCode generates CreateTable code with inline struct
 func generateCreateTableCode(model ModelInfo) string {
 	var code strings.Builder
-	
+
 	// Define minimal struct with all fields
 	code.WriteString(fmt.Sprintf("\t\ttype %s struct {\n", fieldToSnakeCase(model.Name)))
 	code.WriteString("\t\t\tID        uint      `gorm:\"primarykey\"`\n")
 	code.WriteString("\t\t\tCreatedAt time.Time\n")
 	code.WriteString("\t\t\tUpdatedAt time.Time\n")
 	code.WriteString("\t\t\tDeletedAt gorm.DeletedAt `gorm:\"index\"`\n")
-	
+
 	for _, field := range model.Fields {
 		tagStr := ""
 		if field.Tag != "" {
@@ -103,54 +103,54 @@ func generateCreateTableCode(model ModelInfo) string {
 		}
 		code.WriteString(fmt.Sprintf("\t\t\t%s %s%s\n", field.Name, field.Type, tagStr))
 	}
-	
+
 	code.WriteString("\t\t}\n")
 	code.WriteString(fmt.Sprintf("\t\tif err := tx.Migrator().CreateTable(&%s{}); err != nil {\n", fieldToSnakeCase(model.Name)))
 	code.WriteString("\t\t\treturn err\n")
 	code.WriteString("\t\t}")
-	
+
 	return code.String()
 }
 
 // generateAddColumnCode generates AddColumn code with minimal struct
 func generateAddColumnCode(modelName string, field FieldInfo) string {
 	var code strings.Builder
-	
+
 	// Define minimal struct with only the field being added
 	code.WriteString(fmt.Sprintf("\t\ttype %s struct {\n", fieldToSnakeCase(modelName)))
-	
+
 	tagStr := ""
 	if field.Tag != "" {
 		tagStr = " " + field.Tag
 	}
 	code.WriteString(fmt.Sprintf("\t\t\t%s %s%s\n", field.Name, field.Type, tagStr))
 	code.WriteString("\t\t}\n")
-	code.WriteString(fmt.Sprintf("\t\tif err := tx.Migrator().AddColumn(&%s{}, \"%s\"); err != nil {\n", 
+	code.WriteString(fmt.Sprintf("\t\tif err := tx.Migrator().AddColumn(&%s{}, \"%s\"); err != nil {\n",
 		fieldToSnakeCase(modelName), field.Name))
 	code.WriteString("\t\t\treturn err\n")
 	code.WriteString("\t\t}")
-	
+
 	return code.String()
 }
 
 // generateDropColumnCode generates DropColumn code with minimal struct
 func generateDropColumnCode(modelName string, field FieldInfo) string {
 	var code strings.Builder
-	
+
 	// Define minimal struct with only the field being dropped
 	code.WriteString(fmt.Sprintf("\t\ttype %s struct {\n", fieldToSnakeCase(modelName)))
-	
+
 	tagStr := ""
 	if field.Tag != "" {
 		tagStr = " " + field.Tag
 	}
 	code.WriteString(fmt.Sprintf("\t\t\t%s %s%s\n", field.Name, field.Type, tagStr))
 	code.WriteString("\t\t}\n")
-	code.WriteString(fmt.Sprintf("\t\tif err := tx.Migrator().DropColumn(&%s{}, \"%s\"); err != nil {\n", 
+	code.WriteString(fmt.Sprintf("\t\tif err := tx.Migrator().DropColumn(&%s{}, \"%s\"); err != nil {\n",
 		fieldToSnakeCase(modelName), field.Name))
 	code.WriteString("\t\t\treturn err\n")
 	code.WriteString("\t\t}")
-	
+
 	return code.String()
 }
 

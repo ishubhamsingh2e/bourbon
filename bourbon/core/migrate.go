@@ -35,7 +35,7 @@ func RunMigrations(app *Application) error {
 	// Check which migrations are already applied (from gormigrate's table)
 	var appliedIDs []string
 	app.DB.Table("bourbon_migrations").Pluck("id", &appliedIDs)
-	
+
 	appliedMap := make(map[string]bool)
 	for _, id := range appliedIDs {
 		appliedMap[id] = true

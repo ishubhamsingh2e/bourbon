@@ -56,7 +56,7 @@ func (mr *MiddlewareRegistry) Unregister(name string) {
 func (mr *MiddlewareRegistry) List() []string {
 	mr.mu.RLock()
 	defer mr.mu.RUnlock()
-	
+
 	names := make([]string, 0, len(mr.middlewares))
 	for name := range mr.middlewares {
 		names = append(names, name)
@@ -91,4 +91,3 @@ func UnregisterMiddleware(name string) {
 func ListMiddlewares() []string {
 	return globalMiddlewareRegistry.List()
 }
-

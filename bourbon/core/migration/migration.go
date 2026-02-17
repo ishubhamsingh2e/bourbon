@@ -1,6 +1,5 @@
 package migration
 
-
 import (
 	"fmt"
 	"time"

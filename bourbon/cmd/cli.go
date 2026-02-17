@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/ishubhamsingh2e/bourbon/bourbon/core"
-	"github.com/ishubhamsingh2e/bourbon/bourbon/middleware"
 	_ "github.com/ishubhamsingh2e/bourbon/bourbon/database/drivers"
+	"github.com/ishubhamsingh2e/bourbon/bourbon/middleware"
 	"go.uber.org/zap"
 )
 

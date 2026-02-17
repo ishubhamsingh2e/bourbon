@@ -1,6 +1,5 @@
 package gormigrate
 
-
 import (
 	"fmt"
 	"log"
