@@ -1,0 +1,11 @@
+version: "1"
+
+project:
+  name: "todo"
+  profile: "fullstack"
+  structure: "feature"
+  go_module: "todo"
+
+paths:
+  source_dir: "internal/modules"
+  migrations_dir: "db/migrations"

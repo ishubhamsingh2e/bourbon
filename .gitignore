@@ -1,5 +1,5 @@
 # Binaries
-bourbon-cli
+/bourbon-cli
 *.exe
 *.exe~
 *.dll
@@ -35,7 +35,13 @@ tmp/
 *.log
 
 # binary files
-bourbon-cli
-bourbon-cli.exe
-bourbon
-bourbon.exe
+/bourbon-cli
+/bourbon-cli.exe
+bin/
+/bourbon.exe
+
+# AI
+graphify-out
+
+# Databases
+*.db

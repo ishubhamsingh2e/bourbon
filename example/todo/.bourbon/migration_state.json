@@ -1,0 +1,164 @@
+{
+  "apps": {
+    "todos": {
+      "last_hash": "7aebda9666d3d855267660dd885192c859ea48f5ee5c845039fcac71334b85e0",
+      "last_migration": "20260826160454_create_todo_table.sql",
+      "models": {
+        "Todo": {
+          "name": "Todo",
+          "table_name": "todos",
+          "app": "todos",
+          "fields": [
+            {
+              "name": "ID",
+              "column_name": "id",
+              "type": "string",
+              "sql_type": "VARCHAR(36)",
+              "tag": "json:\"id\" db:\"id,primary\"",
+              "is_primary_key": true,
+              "is_not_null": true,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            },
+            {
+              "name": "UserID",
+              "column_name": "user_id",
+              "type": "string",
+              "sql_type": "VARCHAR(255)",
+              "tag": "json:\"user_id\" db:\"user_id,not_null\"",
+              "is_primary_key": false,
+              "is_not_null": true,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            },
+            {
+              "name": "Title",
+              "column_name": "title",
+              "type": "string",
+              "sql_type": "VARCHAR(255)",
+              "tag": "json:\"title\" db:\"title,not_null\"",
+              "is_primary_key": false,
+              "is_not_null": true,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            },
+            {
+              "name": "Completed",
+              "column_name": "completed",
+              "type": "bool",
+              "sql_type": "BOOLEAN",
+              "tag": "json:\"completed\" db:\"completed\" bourbon:\"default:false\"",
+              "is_primary_key": false,
+              "is_not_null": false,
+              "is_unique": false,
+              "default_val": "false",
+              "has_default": true
+            },
+            {
+              "name": "CreatedAt",
+              "column_name": "created_at",
+              "type": "time.Time",
+              "sql_type": "TIMESTAMP WITH TIME ZONE",
+              "tag": "json:\"created_at\" db:\"created_at\"",
+              "is_primary_key": false,
+              "is_not_null": false,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            },
+            {
+              "name": "UpdatedAt",
+              "column_name": "updated_at",
+              "type": "time.Time",
+              "sql_type": "TIMESTAMP WITH TIME ZONE",
+              "tag": "json:\"updated_at\" db:\"updated_at\"",
+              "is_primary_key": false,
+              "is_not_null": false,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            }
+          ],
+          "file_path": "/Volumes/External/Git/bourbon/example/todo/internal/modules/todos/model.go"
+        }
+      }
+    },
+    "users": {
+      "last_hash": "80e19b73fd100c7baf7387f1ed03d1ade0462c2def7b9f45681fc2dca95a752f",
+      "last_migration": "20260826160455_create_user_table.sql",
+      "models": {
+        "User": {
+          "name": "User",
+          "table_name": "users",
+          "app": "users",
+          "fields": [
+            {
+              "name": "ID",
+              "column_name": "id",
+              "type": "string",
+              "sql_type": "VARCHAR(36)",
+              "tag": "json:\"id\" db:\"id\"",
+              "is_primary_key": true,
+              "is_not_null": true,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            },
+            {
+              "name": "Email",
+              "column_name": "email",
+              "type": "string",
+              "sql_type": "VARCHAR(255)",
+              "tag": "json:\"email\" db:\"email\"",
+              "is_primary_key": false,
+              "is_not_null": false,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            },
+            {
+              "name": "Name",
+              "column_name": "name",
+              "type": "string",
+              "sql_type": "VARCHAR(255)",
+              "tag": "json:\"name\" db:\"name\"",
+              "is_primary_key": false,
+              "is_not_null": false,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            },
+            {
+              "name": "CreatedAt",
+              "column_name": "created_at",
+              "type": "time.Time",
+              "sql_type": "TIMESTAMP WITH TIME ZONE",
+              "tag": "json:\"created_at\" db:\"created_at\"",
+              "is_primary_key": false,
+              "is_not_null": false,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            },
+            {
+              "name": "UpdatedAt",
+              "column_name": "updated_at",
+              "type": "time.Time",
+              "sql_type": "TIMESTAMP WITH TIME ZONE",
+              "tag": "json:\"updated_at\" db:\"updated_at\"",
+              "is_primary_key": false,
+              "is_not_null": false,
+              "is_unique": false,
+              "default_val": "",
+              "has_default": false
+            }
+          ],
+          "file_path": "/Volumes/External/Git/bourbon/example/todo/internal/modules/users/model.go"
+        }
+      }
+    }
+  }
+}
