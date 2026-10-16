@@ -21,34 +21,12 @@ Compiles an optimized production binary into `bin/app`.
 ### `bourbon test`
 Runs the Go test suite with `-race` detector and `-cover` profile.
 
-### `bourbon makemigrations [app]`
-Inspects Go struct models via AST parsing, calculates diffs against previous state, prompts interactively for field/model renames and default values, and writes delta SQL migration files.
-- `--name=<name>`: Custom migration name.
-- `--empty`: Create an empty migration skeleton.
-- `--no-input` / `--noinput`: Non-interactive mode applying defaults.
-
-### `bourbon migrate [app]`
-Apply all pending database migrations in chronological order.
-
-### `bourbon showmigrations [app]`
-Display all project migrations with `[X]` (applied) and `[ ]` (unapplied) state.
-
-### `bourbon sqlmigrate <app> <migration_name>`
-Print the raw SQL statements for a migration without executing them.
-- `--backwards`: Print rollback (Down) SQL statements.
-
-### `bourbon db <action>`
-Manage database migrations:
-- `bourbon db makemigrations [app]`: Inspect models and generate migration files.
-- `bourbon db create [name]`: Create a new timestamped SQL migration file (`name` is optional, defaults to `migration`).
-- `bourbon db migrate`: Run pending migrations.
-- `bourbon db rollback`: Rollback the last applied migration.
-- `bourbon db status`: Display migration status table.
-- `bourbon db showmigrations`: Display all migrations with applied status.
-- `bourbon db sqlmigrate <name>`: Print raw SQL for a migration.
-- `bourbon db version`: Display active database schema version.
-- `bourbon db reset`: Roll back all applied migrations.
-- `bourbon db seed`: Seed database fixtures.
+### `bourbon migrate [command]`
+Manage database migrations using your project's transparent migration runner (`cmd/migrate/main.go`).
+- `bourbon migrate` / `bourbon migrate up`: Apply all pending database migrations in `db/migrations/`.
+- `bourbon migrate rollback` / `bourbon migrate down`: Revert the last applied database migration.
+- `bourbon migrate status`: Display a table showing applied vs pending migrations.
+- `bourbon migrate create <name>`: Generate a new timestamped SQL migration file in `db/migrations/`.
 
 ### `bourbon routes`
 Display all registered HTTP route patterns, methods, and handlers.
@@ -59,14 +37,19 @@ Inspect local Go environment, dependencies, toolchain, and manifests.
 ### `bourbon upgrade`
 Checks for newer framework releases.
 
+### `bourbon config`
+Inspect and validate Bourbon configuration.
+
 ---
 
-## Code Generators
+## Code Generators (`bourbon make`)
 
-- `bourbon make:controller <name>`: Generate an HTTP controller.
-- `bourbon make:service <name>`: Generate a domain business service.
-- `bourbon make:repository <name>`: Generate a data repository.
-- `bourbon make:model <name>`: Generate a database model struct.
-- `bourbon make:migration [name]`: Generate a timestamped SQL migration file with table boilerplate (`name` is optional).
-- `bourbon make:middleware <name>`: Generate an HTTP middleware.
-- `bourbon make:job <name>`: Generate a background job worker.
+- `bourbon make app <name>`: Generate a complete vertical feature slice.
+- `bourbon make controller <name>`: Generate an HTTP controller.
+- `bourbon make service <name>`: Generate a domain business service.
+- `bourbon make repository <name>`: Generate a data repository.
+- `bourbon make model <name>`: Generate a database model struct.
+- `bourbon make migration <name>`: Generate a timestamped SQL migration file in `db/migrations/`.
+- `bourbon make middleware <name>`: Generate an HTTP middleware.
+- `bourbon make job <name>`: Generate a background job worker.
+- `bourbon make test <name>`: Generate a test suite skeleton.

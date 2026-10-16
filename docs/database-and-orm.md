@@ -135,26 +135,45 @@ func (r *UserRepository) WithTx(tx database.Tx) repository.Repository[User, stri
 
 ## 4. Database Migrations
 
-Bourbon includes built-in migration management supporting SQL and Go migration files:
+Bourbon provides a zero-magic, transparent migration system. Migrations are executed through an explicit, readable Go runner in your project at `cmd/migrate/main.go`, which connects using your configured `config.Settings` and `cfg.DBDriver()`.
+
+### Running Migrations via Bourbon CLI
 
 ```bash
-# Apply all pending database migrations
-bourbon db:migrate
+# Apply all pending database migrations (in db/migrations/)
+bourbon migrate
+# or
+bourbon migrate up
 
 # Rollback the last applied migration batch
-bourbon db:rollback
+bourbon migrate rollback
 
 # Inspect migration status table
-bourbon db:status
+bourbon migrate status
 
 # Scaffold a new SQL migration
-bourbon make:migration create_users_table
+bourbon migrate create create_users_table
+# or
+bourbon make migration create_users_table
 ```
+
+### Direct Go Toolchain Execution (Zero Magic)
+
+Because `cmd/migrate/main.go` is standard Go code in your repository, you can execute, debug, or deploy migrations in production/CI without needing the Bourbon CLI binary installed:
+
+```bash
+go run ./cmd/migrate up
+go run ./cmd/migrate rollback
+go run ./cmd/migrate status
+```
+
+### Migration File Format
 
 Migration files are stored in `db/migrations/`:
 
 ```sql
 -- +goose Up
+-- +goose StatementBegin
 CREATE TABLE users (
     id TEXT PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
@@ -162,7 +181,10 @@ CREATE TABLE users (
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
 );
+-- +goose StatementEnd
 
 -- +goose Down
+-- +goose StatementBegin
 DROP TABLE users;
+-- +goose StatementEnd
 ```
